@@ -10,9 +10,9 @@ namespace GUI
     {
         protected override async void OnStartup(StartupEventArgs e)
         {
-            
             ExchangeRatesService service = new ExchangeRatesService();
-            var response = await service.GetTodayRate("VND");
+            //var response = await service.GetTodayRate("VND");
+
 
             base.OnStartup(e);
         }

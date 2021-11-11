@@ -15,7 +15,7 @@ namespace GUI.Network.API
 {
     internal class ExchangeRatesService : IRateService
     {
-        AccessKeys _accessKeys = AccessKeys.GetInstance();
+        private readonly AccessKeys _accessKeys = AccessKeys.GetInstance();
         public async Task<Rate> GetTodayRate(string countryCode)
         {
             using (HttpClient client = new HttpClient())

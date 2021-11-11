@@ -4,12 +4,90 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
+        xmlns:viewModel="clr-namespace:GUI.UI.MVVM.ViewModel"
         mc:Ignorable="d"
         Height="600" Width="920"
         WindowStyle="None"
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize"
         Background="Transparent"
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        MouseDown="Window_MouseDown">
+    <Window.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD" />
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="CloseButton.MouseOver.Background" Color="#FC563B" Opacity="1"/>
+        <SolidColorBrush x:Key="CloseButton.Pressed.Background" Color="#EA452A" Opacity="1"/>
+        <SolidColorBrush x:Key="MinimizeButton.MouseOver.Background" Color="#FFAF24" Opacity="1"/>
+        <SolidColorBrush x:Key="MinimizeButton.Pressed.Background" Color="#ED9D14" Opacity="1"/>
+        <Style x:Key="CloseButton" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" CornerRadius="50" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource CloseButton.MouseOver.Background}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource CloseButton.Pressed.Background}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MinimizeButton" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" CornerRadius="50" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource MinimizeButton.MouseOver.Background}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource MinimizeButton.Pressed.Background}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Window.DataContext>
+        <viewModel:MainViewModel/>
+    </Window.DataContext>
     <Border Background="#272537"
             CornerRadius="20">
         <Grid>
@@ -29,7 +107,7 @@
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"
                        Foreground="White"
-                       FontSize="26" 
+                       FontSize="26"
                        Margin="20,0,0,0"/>
 
             <StackPanel Grid.Row="1">
@@ -37,13 +115,17 @@
                              Height="50"
                              Foreground="Wheat"
                              FontSize="15"
-                             Style="{StaticResource MenuButtonTheme}"/>
+                             Style="{StaticResource MenuButtonTheme}"
+                             IsChecked="True"
+                             Command="{Binding HomeViewCommand}"/>
+
 
                 <RadioButton Content="Today Index"
                              Height="50"
                              Foreground="Wheat"
                              FontSize="15"
-                             Style="{StaticResource MenuButtonTheme}"/>
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding TodayIndexViewCommand}"/>
 
                 <RadioButton Content="History Index"
                              Height="50"
@@ -58,17 +140,49 @@
                              Style="{StaticResource MenuButtonTheme}"/>
             </StackPanel>
 
-            <TextBox Grid.Column="1"
-                       Width="250"
-                       Height="40"
-                       Margin="5"
-                       VerticalContentAlignment="Center"
-                       HorizontalAlignment="Left"
-                       Style="{StaticResource ModernTextBox}"/>
+            <DockPanel Grid.Column="1">
+                <DockPanel  HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center">
+                    <StackPanel DockPanel.Dock="Left">
+                        <TextBox
+                            Width="250"
+                            Height="40"
+                            Margin="5"
+                            VerticalContentAlignment="Center"
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource ModernTextBox}"/>
+                    </StackPanel>
+
+                    <StackPanel DockPanel.Dock="Right"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right">
+                        <Button
+                            Style="{DynamicResource MinimizeButton}" Grid.Column="1"
+                            Name="MinimizeButton"
+                            Width="20"
+                            Height="20"
+                            HorizontalAlignment="Right"
+                            VerticalContentAlignment="Center"
+                            Margin="0,0,20,0"
+                            Background="#FFBB29" Click="MinimizeButton_Click"/>
+
+                        <Button
+                            Style="{DynamicResource CloseButton}" Grid.Column="1"
+                            Name="CloseButton"
+                            Width="20"
+                            Height="20"
+                            HorizontalAlignment="Right"
+                            VerticalContentAlignment="Center"
+                            Margin="0,0,20,0"
+                            Background="#F7625B" Click="CloseButton_Click"/>
+                    </StackPanel>
+                </DockPanel>
+            </DockPanel>
 
             <ContentControl Grid.Row="1"
                             Grid.Column="1"
-                            Margin="20"/>
+                            Margin="20"
+                            Content="{Binding CurrentView}"/>
 
         </Grid>
     </Border>
