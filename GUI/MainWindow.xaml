@@ -131,13 +131,15 @@
                              Height="50"
                              Foreground="Wheat"
                              FontSize="15"
-                             Style="{StaticResource MenuButtonTheme}"/>
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding HistoryIndexViewCommand}"/>
 
                 <RadioButton Content="Converter"
                              Height="50"
                              Foreground="Wheat"
                              FontSize="15"
-                             Style="{StaticResource MenuButtonTheme}"/>
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding ConverterViewCommand}"/>
             </StackPanel>
 
             <DockPanel Grid.Column="1">

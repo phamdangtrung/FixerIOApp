@@ -6,8 +6,12 @@ namespace GUI.UI.MVVM.ViewModel
     {
         public RelayCommand HomeViewCommand { get; set; }
         public RelayCommand TodayIndexViewCommand { get; set; }
+        public RelayCommand HistoryIndexViewCommand { get; set; }
+        public RelayCommand ConverterViewCommand { get; set; }
         public HomeViewModel HomeVM { get; set; }
         public TodayIndexViewModel TodayIndexVM { get; set; }
+        public HistoryIndexViewModel HistoryIndexVM { get; set; }
+        public ConverterViewModel ConverterVM { get; set; }
 
         private object _currentView;
         public object CurrentView
@@ -24,6 +28,8 @@ namespace GUI.UI.MVVM.ViewModel
         {
             HomeVM = new();
             TodayIndexVM = new();
+            HistoryIndexVM = new();
+            ConverterVM = new();
 
             CurrentView = HomeVM;
 
@@ -35,6 +41,15 @@ namespace GUI.UI.MVVM.ViewModel
             TodayIndexViewCommand = new(obj =>
             {
                 CurrentView = TodayIndexVM;
+            });
+
+            HistoryIndexViewCommand = new(obj =>
+            {
+                CurrentView = HistoryIndexVM;
+            });
+            ConverterViewCommand = new(obj =>
+            {
+                CurrentView = ConverterVM;
             });
         }
     }
