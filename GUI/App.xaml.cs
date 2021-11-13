@@ -1,4 +1,5 @@
 ﻿using GUI.Network.API;
+using GUI.Network.Shared;
 using System.Windows;
 
 namespace GUI
@@ -13,6 +14,7 @@ namespace GUI
             ExchangeRatesService service = new ExchangeRatesService();
             //var response = await service.GetTodayRate("VND");
 
+            var list = CommonCurrencyCodes.GetInstance().CurrencyCodes;
 
             base.OnStartup(e);
         }
