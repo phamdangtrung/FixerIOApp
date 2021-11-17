@@ -7,6 +7,6 @@ namespace GUI.Network.Models
     {
         public string BaseCurrency { get; set; }
         public DateTime Date { get; set; }
-        public IList<SubRate> Rates { get; set; }
+        public Dictionary<string, double> Rates { get; set; }
     }
 }

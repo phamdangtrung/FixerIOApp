@@ -6,8 +6,45 @@
              xmlns:local="clr-namespace:GUI.UI.MVVM.View"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="#1B1B1B">
-    <Grid>
+             Background="Transparent"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vms="clr-namespace:GUI.UI.MVVM.ViewModel">
+    <UserControl.DataContext>
+        <vms:TodayIndexViewModel/>
+    </UserControl.DataContext>
 
+    <Grid>
+        <!--<Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <StackPanel Height="100" Orientation="Horizontal">
+                <StackPanel Width="200">
+                    <ComboBox x:Name="Base"
+                              Style="{StaticResource MaterialDesignFilledComboBox}"
+                              ItemsSource="{Binding Countries}"
+                              DisplayMemberPath="Country"
+                              SelectedItem="{Binding SelectedBase}"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Height="100" Orientation="Horizontal"></StackPanel>
+        </StackPanel>
+        <lvc:CartesianChart
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            Series="{Binding Series}"
+            XAxes="{Binding XAxes}"
+            YAxes="{Binding YAxes}"
+            TooltipPosition="Left"
+            TooltipFontFamily="Segoe UI"
+            TooltipFontSize="25"
+            TooltipTextBrush="#f2f4c3"
+            TooltipBackground="#480032">
+        </lvc:CartesianChart>
     </Grid>
 </UserControl>

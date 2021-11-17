@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -33,16 +32,16 @@ namespace GUI.Network.API
 
                 LinkedList<SubRate> subRateListings = new LinkedList<SubRate>();
 
-                foreach (var item in apiRate.Rates)
-                {
-                    subRateListings.AddLast(new SubRate { Name = item.Key, Value = item.Value });
-                }
+                //foreach (var item in apiRate.Rates)
+                //{
+                //    subRateListings.AddLast(new SubRate { Name = item.Key, Value = item.Value });
+                //}
 
                 Rate rate = new Rate
                 {
                     BaseCurrency = apiRate.Base,
                     Date = DateTime.ParseExact(apiRate.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    Rates = subRateListings.ToList(),
+                    Rates = apiRate.Rates,
                 };
 
                 return rate;

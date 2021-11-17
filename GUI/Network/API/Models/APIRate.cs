@@ -7,6 +7,6 @@ namespace GUI.Network.API.Models
         public string Timestamp { get; set; }
         public string Base { get; set; }
         public string Date { get; set; }
-        public Dictionary<string, decimal> Rates { get; set; }
+        public Dictionary<string, double> Rates { get; set; }
     }
 }
