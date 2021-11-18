@@ -9,13 +9,22 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace GUI.UI.MVVM.ViewModel
 {
     internal class TodayIndexViewModel : ObservableObject
     {
-        private IEnumerable<CurrencyCode> _countries;
+        private Rate _todayRate;
 
+        public Rate TodayRate
+        {
+            get { return _todayRate; }
+            set { _todayRate = value; }
+        }
+
+
+        private IEnumerable<CurrencyCode> _countries;
         public IEnumerable<CurrencyCode> Countries
         {
             get { return _countries; }
@@ -32,7 +41,8 @@ namespace GUI.UI.MVVM.ViewModel
                 _selectedBase = value;
                 base.OnPropertyChanged("SelectedBase");
 
-                MessageBox.Show("Test");
+                AddCurrencyCommand.Execute(this);
+
             }
         }
 
@@ -47,7 +57,7 @@ namespace GUI.UI.MVVM.ViewModel
 
 
         private ObservableCollection<double> observableValues { get; set; }
-        public IEnumerable<ISeries> Series { get; set; }
+        public IList<ISeries> Series { get; set; }
         public List<Axis> XAxes { get; set; }
         public List<Axis> YAxes { get; set; }
         private readonly ExchangeRatesService service = new();
@@ -57,14 +67,14 @@ namespace GUI.UI.MVVM.ViewModel
 
             Countries = CommonCurrencyCodes.GetInstance().CurrencyCodes;
 
-            var rates = Task.Run(() => service.GetTodayRate("EUR")).Result;
+            TodayRate = Task.Run(() => service.GetTodayRate("EUR")).Result;
             observableValues = new ObservableCollection<double>
             {
-                rates.Rates["CNY"],
-                rates.Rates["TWD"],
-                rates.Rates["AUD"],
-                rates.Rates["JPY"],
-                rates.Rates["THB"],
+                TodayRate.Rates["CNY"],
+                TodayRate.Rates["TWD"],
+                TodayRate.Rates["AUD"],
+                TodayRate.Rates["JPY"],
+                TodayRate.Rates["THB"],
             };
 
             Series = new ObservableCollection<ISeries>
@@ -82,7 +92,7 @@ namespace GUI.UI.MVVM.ViewModel
                 new Axis
                 {
                     // Use the labels property to define named labels.
-                    Labels = new string[] { "CNY", "TWD", "AUD", "JPY", "THB" }
+                    Labels = new List<string> { "CNY", "TWD", "AUD", "JPY", "THB" }
                 }
             };
 
@@ -103,7 +113,21 @@ namespace GUI.UI.MVVM.ViewModel
                     // the amount is in millions or trillions
                 }
             };
-
         }
+
+        public void AddCurrency(string currencyCode)
+        {
+            MessageBox.Show(currencyCode);
+            if (observableValues.Count >= 10)
+            {
+                observableValues.RemoveAt(0);
+                XAxes[0].Labels.RemoveAt(0);
+            }
+
+            observableValues.Add(TodayRate.Rates[currencyCode]);
+            XAxes[0].Labels.Add(currencyCode);
+        }
+
+        public ICommand AddCurrencyCommand => new RelayCommand(o => AddCurrency(SelectedBase.Currency_Code.ToString()));
     }
 }

@@ -23,9 +23,13 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
-            <StackPanel Height="100" Orientation="Horizontal">
+            <StackPanel Height="100"
+                        Orientation="Horizontal"
+                        Margin="10,0,10,0">
                 <StackPanel Width="200">
                     <ComboBox x:Name="Base"
+                              IsEditable="False"
+                              Background="#CFCFCF"
                               Style="{StaticResource MaterialDesignFilledComboBox}"
                               ItemsSource="{Binding Countries}"
                               DisplayMemberPath="Country"
