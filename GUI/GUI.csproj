@@ -18,4 +18,11 @@
     <Folder Include="UI\MVVM\Logo\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="UI\Theme\TextBoxSmallTheme.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

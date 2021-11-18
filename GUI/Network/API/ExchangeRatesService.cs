@@ -14,16 +14,16 @@ namespace GUI.Network.API
 {
     internal class ExchangeRatesService : IRateService
     {
-        private readonly AccessKeys _accessKeys = AccessKeys.GetInstance();
+        private readonly KeyPair _accessKeys = AccessKeys.GetInstance().ExchangeRates;
         public async Task<Rate> GetTodayRate(string countryCode)
         {
             using (HttpClient client = new HttpClient())
             {
-                string requestURI = _accessKeys.ExchangeRates.URI;
+                string requestURI = _accessKeys.URI;
 
                 requestURI += "latest";
                 requestURI += "?access_key=";
-                requestURI += _accessKeys.ExchangeRates.AccessKey;
+                requestURI += _accessKeys.AccessKey;
 
                 HttpResponseMessage response = await client.GetAsync(requestURI);
                 JsonSerializer serializer = new JsonSerializer();

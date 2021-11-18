@@ -15,8 +15,8 @@ namespace GUI.UI.MVVM.ViewModel
 {
     internal class TodayIndexViewModel : ObservableObject
     {
+        private bool _firstInit = true;
         private Rate _todayRate;
-
         public Rate TodayRate
         {
             get { return _todayRate; }
@@ -38,11 +38,17 @@ namespace GUI.UI.MVVM.ViewModel
             get { return _selectedBase; }
             set
             {
+                if (_firstInit)
+                {
+                    _selectedBase = value;
+                    //OnPropertyChanged("SelectedBase");
+
+                    _firstInit = false;
+                    return;
+                }
                 _selectedBase = value;
-                base.OnPropertyChanged("SelectedBase");
-
+                OnPropertyChanged("SelectedBase");
                 AddCurrencyCommand.Execute(this);
-
             }
         }
 
@@ -56,10 +62,11 @@ namespace GUI.UI.MVVM.ViewModel
 
 
 
-        private ObservableCollection<double> observableValues { get; set; }
+        private ObservableCollection<double> ObservableValues { get; set; }
         public IList<ISeries> Series { get; set; }
         public List<Axis> XAxes { get; set; }
         public List<Axis> YAxes { get; set; }
+
         private readonly ExchangeRatesService service = new();
 
         public TodayIndexViewModel()
@@ -67,8 +74,11 @@ namespace GUI.UI.MVVM.ViewModel
 
             Countries = CommonCurrencyCodes.GetInstance().CurrencyCodes;
 
+            //SelectedBase = Countries.FirstOrDefault(x => x.Currency_Code == "EUR");
+
             TodayRate = Task.Run(() => service.GetTodayRate("EUR")).Result;
-            observableValues = new ObservableCollection<double>
+
+            ObservableValues = new ObservableCollection<double>
             {
                 TodayRate.Rates["CNY"],
                 TodayRate.Rates["TWD"],
@@ -82,7 +92,7 @@ namespace GUI.UI.MVVM.ViewModel
                 new ColumnSeries<double>
                 {
                     Name = "Rate Exchange",
-                    Values = observableValues,
+                    Values = ObservableValues,
                     AnimationsSpeed = TimeSpan.FromSeconds(2.5)
                 }
             };
@@ -118,13 +128,16 @@ namespace GUI.UI.MVVM.ViewModel
         public void AddCurrency(string currencyCode)
         {
             MessageBox.Show(currencyCode);
-            if (observableValues.Count >= 10)
+
+            if (XAxes[0].Labels.Contains(currencyCode)) return;
+
+            if (ObservableValues.Count >= 10)
             {
-                observableValues.RemoveAt(0);
+                ObservableValues.RemoveAt(0);
                 XAxes[0].Labels.RemoveAt(0);
             }
 
-            observableValues.Add(TodayRate.Rates[currencyCode]);
+            ObservableValues.Add(TodayRate.Rates[currencyCode]);
             XAxes[0].Labels.Add(currencyCode);
         }
 
