@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -46,6 +47,25 @@ namespace GUI.Network.API
 
                 return rate;
             }
+        }
+
+        public List<SubRate> GetSubRates(Dictionary<string, double> subRates, IEnumerable<CurrencyCode> countries)
+        {
+            LinkedList<SubRate> newSubRates = new();
+            foreach (var item in subRates)
+            {
+                var country = countries.FirstOrDefault(x => x.Code.Equals(item.Key.ToString()));
+
+                if (country is null) continue;
+
+                newSubRates
+                    .AddLast
+                    (
+                    new SubRate(country.Name, item.Key.ToString(), item.Value)
+                    );
+            }
+
+            return newSubRates.ToList();
         }
     }
 }

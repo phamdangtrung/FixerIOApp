@@ -16,9 +16,6 @@ namespace GUI.Network.Shared
 
         private static readonly object _lock = new();
 
-        public IEnumerable<CurrencyCode> CurrencyCodes { get; private set; }
-        public IEnumerable<CurrencyCode2> CurrencyCodes2 { get; private set; }
-
         internal static CommonCurrencyCodes GetInstance()
         {
             if (_instance == null)
@@ -29,7 +26,7 @@ namespace GUI.Network.Shared
                     {
                         _instance = new();
 
-                        _instance.CurrencyCodes2 = Initialize2();
+                        _instance.CurrencyCodes = Initialize2();
                     }
                 }
             }
@@ -37,36 +34,9 @@ namespace GUI.Network.Shared
             return _instance;
         }
 
-        private static IEnumerable<CurrencyCode> Initialize()
-        {
-            // Get file path
-            string workingDirectory = Environment.CurrentDirectory;
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-            string filePath = @"\Network\Shared\CurrencyCodes.json";
-            filePath = projectDirectory + filePath;
+        public IEnumerable<CurrencyCode> CurrencyCodes { get; private set; }
 
-            // Read file from path
-            using StreamReader streamReader = new StreamReader(filePath);
-            var obj = streamReader.ReadToEnd();
-            var json = Encoding.UTF8.GetBytes(obj);
-
-            // Deserialize and map to list of records
-            var deserializedObject = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(json);
-            LinkedList<CurrencyCode> currencyCodes = new();
-
-            foreach (var item in deserializedObject)
-            {
-                currencyCodes
-                    .AddLast
-                    (
-                        new CurrencyCode(item["country"], item["currency_code"])
-                    );
-            }
-
-            return currencyCodes.AsEnumerable();
-        }
-
-        private static IEnumerable<CurrencyCode2> Initialize2()
+        private static IEnumerable<CurrencyCode> Initialize2()
         {
             // Get file path
             string workingDirectory = Environment.CurrentDirectory;
@@ -81,14 +51,14 @@ namespace GUI.Network.Shared
 
             // Deserialize and map to list of records
             var deserializedObject = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, dynamic>>>(json);
-            LinkedList<CurrencyCode2> currencyCodes = new();
+            LinkedList<CurrencyCode> currencyCodes = new();
 
             foreach (var item in deserializedObject)
             {
                 currencyCodes
                     .AddLast
                     (
-                        new CurrencyCode2(item.Key.ToString(), item.Value["symbol"].ToString(), item.Value["name"].ToString(), item.Value["code"].ToString())
+                        new CurrencyCode(item.Key.ToString(), item.Value["symbol"].ToString(), item.Value["name"].ToString(), item.Value["code"].ToString())
                     );
             }
 

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace GUI.UI.MVVM.ViewModel
@@ -20,7 +21,11 @@ namespace GUI.UI.MVVM.ViewModel
         public IList<SubRate> SubRates
         {
             get { return _subRates; }
-            set { _subRates = value; }
+            set
+            {
+                _subRates = value;
+                OnPropertyChanged("SubRates");
+            }
         }
 
         private Rate _todayRate;
@@ -30,15 +35,15 @@ namespace GUI.UI.MVVM.ViewModel
             set { _todayRate = value; }
         }
 
-        private IEnumerable<CurrencyCode2> _countries;
-        public IEnumerable<CurrencyCode2> Countries
+        private IEnumerable<CurrencyCode> _countries;
+        public IEnumerable<CurrencyCode> Countries
         {
             get { return _countries; }
             set { _countries = value; }
         }
 
-        private CurrencyCode2 _selectedBase;
-        public CurrencyCode2 SelectedBase
+        private CurrencyCode _selectedBase;
+        public CurrencyCode SelectedBase
         {
             get { return _selectedBase; }
             set
@@ -48,15 +53,14 @@ namespace GUI.UI.MVVM.ViewModel
             }
         }
 
-        private CurrencyCode2 _selectedTarget;
-        public CurrencyCode2 SelectedTarget
+        private CurrencyCode _selectedTarget;
+        public CurrencyCode SelectedTarget
         {
             get { return _selectedTarget; }
             set
             {
                 _selectedTarget = value;
                 OnPropertyChanged("SelectedTarget");
-
             }
         }
 
@@ -68,6 +72,28 @@ namespace GUI.UI.MVVM.ViewModel
             {
                 result = value;
                 OnPropertyChanged("Result");
+            }
+        }
+
+        private string _baseText;
+
+        public string BaseText
+        {
+            get { return _baseText; }
+            set
+            {
+                _baseText = value;
+                OnPropertyChanged("BaseText");
+            }
+        }
+
+        private double _input;
+        public double Input
+        {
+            get { return _input; }
+            set
+            {
+                _input = value;
             }
         }
 
@@ -88,10 +114,17 @@ namespace GUI.UI.MVVM.ViewModel
         #region Initialization
         public TodayIndexViewModel()
         {
-            Countries = _currencyInstance.CurrencyCodes2;
-
+            // Get items for Countries and TodayRate
+            Countries = _currencyInstance.CurrencyCodes;
             TodayRate = Task.Run(() => _service.GetTodayRate("EUR")).Result;
 
+            // Set default values for SelectedBase, SelectedTarget and BaseText
+            SelectedTarget = Countries.FirstOrDefault(x => x.Code.Equals("EUR"));
+            SelectedBase = Countries.FirstOrDefault(x => x.Code.Equals("EUR"));
+            BaseText = "Default Base: EUR";
+            Input = 1;
+
+            #region LiveChart initialization
             ObservableValues = new ObservableCollection<double>
             {
                 TodayRate.Rates["CNY"],
@@ -127,27 +160,17 @@ namespace GUI.UI.MVVM.ViewModel
                     Labeler = Labelers.Default
                 }
             };
+            #endregion
 
-            LinkedList<SubRate> subRates = new();
-
-            foreach (var item in TodayRate.Rates)
-            {
-                var country = Countries.FirstOrDefault(x => x.Code.Equals(item.Key.ToString()));
-
-                if (country is null) continue;
-
-                subRates
-                    .AddLast(new SubRate(country.Name, item.Key.ToString(), item.Value));
-            }
-
-            SubRates = subRates.ToList();
+            SubRates = _service.GetSubRates(TodayRate.Rates, Countries);
         }
         #endregion
 
         #region Methods
-        public void AddCurrency(string currencyCode)
+        public void AddCurrency()
         {
-            if (XAxes[0].Labels.Contains(currencyCode)) return;
+            // Avoid adding identical bars
+            if (XAxes[0].Labels.Contains(SelectedTarget.Code)) return;
 
             // Add bars
             if (ObservableValues.Count >= 10)
@@ -157,21 +180,46 @@ namespace GUI.UI.MVVM.ViewModel
             }
 
             // Add labels
-            ObservableValues.Add(TodayRate.Rates[currencyCode]);
-            XAxes[0].Labels.Add(currencyCode);
-
+            ObservableValues.Add(TodayRate.Rates[SelectedTarget.Code]);
+            XAxes[0].Labels.Add(SelectedTarget.Code);
         }
 
-        public void ExchangeCurrency(double result, CurrencyCode2 targetCurrency)
+        public void ExchangeCurrency()
         {
+            if (SelectedTarget is null)
+            {
+                MessageBox.Show("Invalid Target Currency. Please select again!");
+                return;
+            }
+
+            double result = TodayRate.Rates[SelectedTarget.Key.ToString()];
+
+            // Add a new bar whenever the EXCHANGE button is pressed
             AddCurrencyCommand.Execute(this);
-            Result = $"{ result } :: { targetCurrency.Symbol }";
+
+            // Set the Result TextBlock
+            Result = $"{ Input * result } :: { SelectedTarget.Symbol }";
+        }
+
+        public void SetBaseCurrency()
+        {
+            if (SelectedBase is null)
+            {
+                MessageBox.Show("Invalid Base Currency. Please select again!");
+                return;
+            }
+
+            BaseText = $"Current Base: { SelectedBase.Code }";
+
+            TodayRate = Task.Run(() => _service.GetTodayRate(SelectedBase.Code)).Result;
+            SubRates = _service.GetSubRates(TodayRate.Rates, Countries);
         }
         #endregion
 
         #region Commands
-        public ICommand AddCurrencyCommand => new RelayCommand(o => AddCurrency(SelectedTarget.Code.ToString()));
-        public ICommand ExchangeCurrencyCommand => new RelayCommand(o => ExchangeCurrency(TodayRate.Rates[SelectedTarget.Key.ToString()], SelectedTarget));
+        public ICommand AddCurrencyCommand => new RelayCommand(o => AddCurrency());
+        public ICommand ExchangeCurrencyCommand => new RelayCommand(o => ExchangeCurrency());
+        public ICommand SetBaseCurrencyCommand => new RelayCommand(o => SetBaseCurrency());
 
         #endregion
     }

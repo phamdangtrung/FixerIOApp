@@ -75,6 +75,13 @@
                     Orientation="Horizontal"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
+                    <TextBox Width="70"
+                             VerticalContentAlignment="Center"
+                             HorizontalContentAlignment="Left"
+                             Background="#353333"
+                             Foreground="#CFCFCF"
+                             Text="{Binding Input}"
+                             />
                     <TextBox IsReadOnly="True"
                             Width="170"
                             Height="40"
@@ -97,19 +104,30 @@
                         Background="#394D63"
                         Foreground="#8FB9AA"
                         Content="SET BASE"
-                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                        Command="{Binding SetBaseCurrencyCommand}"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
 
         <DockPanel Grid.Column="1">
+            <materialDesign:Chip
+                HorizontalAlignment="Center"
+                Background="#607D8B"
+                Foreground="#EAEEF0"
+                Content="{Binding BaseText}"
+                DockPanel.Dock="Top"
+                Margin="0,5,0,5"/>
+
             <DataGrid IsReadOnly="True"
-                ItemsSource="{Binding SubRates}"
-                CanUserSortColumns="False"
-                CanUserAddRows="False"
-                materialDesign:DataGridAssist.CellPadding="4 2 2 2"
-                materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2" />
+                    ItemsSource="{Binding SubRates}"
+                    CanUserSortColumns="False"
+                    CanUserAddRows="False"
+                    materialDesign:DataGridAssist.CellPadding="4 2 2 2"
+                    materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2"
+                    DockPanel.Dock="Bottom"/>
         </DockPanel>
+
 
         <lvc:CartesianChart
             Grid.Row="1"
