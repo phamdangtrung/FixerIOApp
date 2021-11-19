@@ -43,7 +43,7 @@
                               Background="#CFCFCF"
                               Style="{StaticResource MaterialDesignFilledComboBox}"
                               ItemsSource="{Binding Countries}"
-                              DisplayMemberPath="Country"
+                              DisplayMemberPath="Name"
                               SelectedItem="{Binding SelectedBase}"/>
                 </StackPanel>
 
@@ -63,7 +63,7 @@
                               Background="#CFCFCF"
                               Style="{StaticResource MaterialDesignFilledComboBox}"
                               ItemsSource="{Binding Countries}"
-                              DisplayMemberPath="Country"
+                              DisplayMemberPath="Name"
                               SelectedItem="{Binding SelectedTarget}"/>
                 </StackPanel>
 
@@ -81,14 +81,16 @@
                             Margin="20,0,0,0"
                             VerticalContentAlignment="Center"
                             HorizontalAlignment="Left"
-                            Style="{StaticResource ModernTextBoxSmall}"/>
+                            Style="{StaticResource ModernTextBoxSmall}"
+                            Text="{Binding Result}"/>
                     <RepeatButton
                         Margin="50,0,0,0"
                         ToolTip="Resource name: MaterialDesignRaisedButton"
                         Background="#394D63"
                         Foreground="#8FB9AA"
                         Content="EXCHANGE"
-                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                        Command="{Binding ExchangeCurrencyCommand}"/>
                     <RepeatButton
                         Margin="50,0,0,0"
                         ToolTip="Resource name: MaterialDesignRaisedButton"
@@ -102,7 +104,7 @@
 
         <DockPanel Grid.Column="1">
             <DataGrid IsReadOnly="True"
-                ItemsSource="{Binding Countries}"
+                ItemsSource="{Binding SubRates}"
                 CanUserSortColumns="False"
                 CanUserAddRows="False"
                 materialDesign:DataGridAssist.CellPadding="4 2 2 2"

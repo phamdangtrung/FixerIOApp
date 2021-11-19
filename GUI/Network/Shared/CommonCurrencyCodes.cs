@@ -17,6 +17,7 @@ namespace GUI.Network.Shared
         private static readonly object _lock = new();
 
         public IEnumerable<CurrencyCode> CurrencyCodes { get; private set; }
+        public IEnumerable<CurrencyCode2> CurrencyCodes2 { get; private set; }
 
         internal static CommonCurrencyCodes GetInstance()
         {
@@ -28,7 +29,7 @@ namespace GUI.Network.Shared
                     {
                         _instance = new();
 
-                        _instance.CurrencyCodes = Initialize();
+                        _instance.CurrencyCodes2 = Initialize2();
                     }
                 }
             }
@@ -59,6 +60,35 @@ namespace GUI.Network.Shared
                     .AddLast
                     (
                         new CurrencyCode(item["country"], item["currency_code"])
+                    );
+            }
+
+            return currencyCodes.AsEnumerable();
+        }
+
+        private static IEnumerable<CurrencyCode2> Initialize2()
+        {
+            // Get file path
+            string workingDirectory = Environment.CurrentDirectory;
+            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
+            string filePath = @"\Network\Shared\CurrencyCodes_2.json";
+            filePath = projectDirectory + filePath;
+
+            // Read file from path
+            using StreamReader streamReader = new StreamReader(filePath);
+            var obj = streamReader.ReadToEnd();
+            var json = Encoding.UTF8.GetBytes(obj);
+
+            // Deserialize and map to list of records
+            var deserializedObject = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, dynamic>>>(json);
+            LinkedList<CurrencyCode2> currencyCodes = new();
+
+            foreach (var item in deserializedObject)
+            {
+                currencyCodes
+                    .AddLast
+                    (
+                        new CurrencyCode2(item.Key.ToString(), item.Value["symbol"].ToString(), item.Value["name"].ToString(), item.Value["code"].ToString())
                     );
             }
 

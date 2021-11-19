@@ -7,15 +7,22 @@ using LiveChartsCore.SkiaSharpView;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 
 namespace GUI.UI.MVVM.ViewModel
 {
     internal class TodayIndexViewModel : ObservableObject
     {
-        private bool _firstInit = true;
+        #region MVVM models
+        private IList<SubRate> _subRates;
+        public IList<SubRate> SubRates
+        {
+            get { return _subRates; }
+            set { _subRates = value; }
+        }
+
         private Rate _todayRate;
         public Rate TodayRate
         {
@@ -23,60 +30,67 @@ namespace GUI.UI.MVVM.ViewModel
             set { _todayRate = value; }
         }
 
-
-        private IEnumerable<CurrencyCode> _countries;
-        public IEnumerable<CurrencyCode> Countries
+        private IEnumerable<CurrencyCode2> _countries;
+        public IEnumerable<CurrencyCode2> Countries
         {
             get { return _countries; }
             set { _countries = value; }
         }
 
-        private CurrencyCode _selectedBase;
-
-        public CurrencyCode SelectedBase
+        private CurrencyCode2 _selectedBase;
+        public CurrencyCode2 SelectedBase
         {
             get { return _selectedBase; }
             set
             {
-                if (_firstInit)
-                {
-                    _selectedBase = value;
-                    //OnPropertyChanged("SelectedBase");
-
-                    _firstInit = false;
-                    return;
-                }
                 _selectedBase = value;
                 OnPropertyChanged("SelectedBase");
-                AddCurrencyCommand.Execute(this);
             }
         }
 
-        private CurrencyCode _selectedTarget;
-
-        public CurrencyCode SelectedTarget
+        private CurrencyCode2 _selectedTarget;
+        public CurrencyCode2 SelectedTarget
         {
             get { return _selectedTarget; }
-            set { _selectedTarget = value; }
+            set
+            {
+                _selectedTarget = value;
+                OnPropertyChanged("SelectedTarget");
+
+            }
         }
 
+        private string result;
+        public string Result
+        {
+            get { return result; }
+            set
+            {
+                result = value;
+                OnPropertyChanged("Result");
+            }
+        }
 
+        #endregion
 
+        #region LiveChart properties
         private ObservableCollection<double> ObservableValues { get; set; }
         public IList<ISeries> Series { get; set; }
         public List<Axis> XAxes { get; set; }
         public List<Axis> YAxes { get; set; }
+        #endregion
 
-        private readonly ExchangeRatesService service = new();
+        #region Network instances
+        private readonly ExchangeRatesService _service = new();
+        private readonly CommonCurrencyCodes _currencyInstance = CommonCurrencyCodes.GetInstance();
+        #endregion
 
+        #region Initialization
         public TodayIndexViewModel()
         {
+            Countries = _currencyInstance.CurrencyCodes2;
 
-            Countries = CommonCurrencyCodes.GetInstance().CurrencyCodes;
-
-            //SelectedBase = Countries.FirstOrDefault(x => x.Currency_Code == "EUR");
-
-            TodayRate = Task.Run(() => service.GetTodayRate("EUR")).Result;
+            TodayRate = Task.Run(() => _service.GetTodayRate("EUR")).Result;
 
             ObservableValues = new ObservableCollection<double>
             {
@@ -110,37 +124,55 @@ namespace GUI.UI.MVVM.ViewModel
             {
                 new Axis
                 {
-                    // Now the Y axis we will display labels as currency
-                    // LiveCharts provides some common formatters
-                    // in this case we are using the currency formatter.
                     Labeler = Labelers.Default
-
-                    // you could also build your own currency formatter
-                    // for example:
-                    // Labeler = (value) => value.ToString("C")
-
-                    // But the one that LiveCharts provides creates shorter labels when
-                    // the amount is in millions or trillions
                 }
             };
-        }
 
+            LinkedList<SubRate> subRates = new();
+
+            foreach (var item in TodayRate.Rates)
+            {
+                var country = Countries.FirstOrDefault(x => x.Code.Equals(item.Key.ToString()));
+
+                if (country is null) continue;
+
+                subRates
+                    .AddLast(new SubRate(country.Name, item.Key.ToString(), item.Value));
+            }
+
+            SubRates = subRates.ToList();
+        }
+        #endregion
+
+        #region Methods
         public void AddCurrency(string currencyCode)
         {
-            MessageBox.Show(currencyCode);
-
             if (XAxes[0].Labels.Contains(currencyCode)) return;
 
+            // Add bars
             if (ObservableValues.Count >= 10)
             {
                 ObservableValues.RemoveAt(0);
                 XAxes[0].Labels.RemoveAt(0);
             }
 
+            // Add labels
             ObservableValues.Add(TodayRate.Rates[currencyCode]);
             XAxes[0].Labels.Add(currencyCode);
+
         }
 
-        public ICommand AddCurrencyCommand => new RelayCommand(o => AddCurrency(SelectedBase.Currency_Code.ToString()));
+        public void ExchangeCurrency(double result, CurrencyCode2 targetCurrency)
+        {
+            AddCurrencyCommand.Execute(this);
+            Result = $"{ result } :: { targetCurrency.Symbol }";
+        }
+        #endregion
+
+        #region Commands
+        public ICommand AddCurrencyCommand => new RelayCommand(o => AddCurrency(SelectedTarget.Code.ToString()));
+        public ICommand ExchangeCurrencyCommand => new RelayCommand(o => ExchangeCurrency(TodayRate.Rates[SelectedTarget.Key.ToString()], SelectedTarget));
+
+        #endregion
     }
 }
