@@ -5,9 +5,141 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:GUI.UI.MVVM.View"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800"
-             Background="#1B1B1B">
-    <Grid>
+             d:DesignHeight="450" d:DesignWidth="1000"
+             Background="Transparent"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vms="clr-namespace:GUI.UI.MVVM.ViewModel"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <UserControl.DataContext>
+        <vms:TodayIndexViewModel/>
+    </UserControl.DataContext>
 
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="650"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <StackPanel Height="100"
+                        Orientation="Horizontal"
+                        MaxWidth="570">
+                <StackPanel Width="300"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <Label Content="Base Currency"
+                           Foreground="#CFCFCF"
+                           VerticalAlignment="Center"/>
+                    <ComboBox x:Name="Base"
+                              MaxWidth="170"
+                              IsEditable="True"
+                              IsReadOnly="False"
+                              Text="Default (EUR). Please select!"
+                              Margin="10,0,0,10"
+                              Background="#CFCFCF"
+                              Style="{StaticResource MaterialDesignFilledComboBox}"
+                              ItemsSource="{Binding Countries}"
+                              DisplayMemberPath="Name"
+                              SelectedItem="{Binding SelectedBase}"/>
+                </StackPanel>
+
+                <StackPanel Width="220"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <Label Content="Target Currency"
+                           Foreground="#CFCFCF"
+                           VerticalAlignment="Center"/>
+                    <ComboBox x:Name="Target"
+                              MaxWidth="170"
+                              IsEditable="True"
+                              IsReadOnly="False"
+                              Text="Please select!"
+                              Margin="10,0,0,10"
+                              Background="#CFCFCF"
+                              Style="{StaticResource MaterialDesignFilledComboBox}"
+                              ItemsSource="{Binding Countries}"
+                              DisplayMemberPath="Name"
+                              SelectedItem="{Binding SelectedTarget}"/>
+                </StackPanel>
+
+            </StackPanel>
+            <StackPanel Height="100"
+                        Orientation="Horizontal"
+                        MaxWidth="570">
+                <StackPanel
+                    Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <TextBox Width="70"
+                             VerticalContentAlignment="Center"
+                             HorizontalContentAlignment="Left"
+                             Background="#353333"
+                             Foreground="#CFCFCF"
+                             Text="{Binding Input}"
+                             />
+                    <TextBox IsReadOnly="True"
+                            Width="170"
+                            Height="40"
+                            Margin="20,0,0,0"
+                            VerticalContentAlignment="Center"
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource ModernTextBoxSmall}"
+                            Text="{Binding Result}"/>
+                    <RepeatButton
+                        Margin="50,0,0,0"
+                        ToolTip="Resource name: MaterialDesignRaisedButton"
+                        Background="#394D63"
+                        Foreground="#8FB9AA"
+                        Content="EXCHANGE"
+                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                        Command="{Binding ExchangeCurrencyCommand}"/>
+                    <RepeatButton
+                        Margin="50,0,0,0"
+                        ToolTip="Resource name: MaterialDesignRaisedButton"
+                        Background="#394D63"
+                        Foreground="#8FB9AA"
+                        Content="SET BASE"
+                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                        Command="{Binding SetBaseCurrencyCommand}"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <DockPanel Grid.Column="1">
+            <materialDesign:Chip
+                HorizontalAlignment="Center"
+                Background="#607D8B"
+                Foreground="#EAEEF0"
+                Content="{Binding BaseText}"
+                DockPanel.Dock="Top"
+                Margin="0,5,0,5"/>
+
+            <DataGrid IsReadOnly="True"
+                    ItemsSource="{Binding SubRates}"
+                    CanUserSortColumns="False"
+                    CanUserAddRows="False"
+                    materialDesign:DataGridAssist.CellPadding="4 2 2 2"
+                    materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2"
+                    DockPanel.Dock="Bottom"/>
+        </DockPanel>
+
+
+        <lvc:CartesianChart
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            Series="{Binding Series}"
+            XAxes="{Binding XAxes}"
+            YAxes="{Binding YAxes}"
+            TooltipPosition="Left"
+            TooltipFontFamily="Segoe UI"
+            TooltipFontSize="25"
+            TooltipTextBrush="#f2f4c3"
+            TooltipBackground="#480032">
+        </lvc:CartesianChart>
     </Grid>
 </UserControl>

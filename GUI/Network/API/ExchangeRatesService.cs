@@ -15,16 +15,16 @@ namespace GUI.Network.API
 {
     internal class ExchangeRatesService : IRateService
     {
-        private readonly AccessKeys _accessKeys = AccessKeys.GetInstance();
+        private readonly KeyPair _accessKeys = AccessKeys.GetInstance().ExchangeRates;
         public async Task<Rate> GetTodayRate(string countryCode)
         {
             using (HttpClient client = new HttpClient())
             {
-                string requestURI = _accessKeys.ExchangeRates.URI;
+                string requestURI = _accessKeys.URI;
 
                 requestURI += "latest";
                 requestURI += "?access_key=";
-                requestURI += _accessKeys.ExchangeRates.AccessKey;
+                requestURI += _accessKeys.AccessKey;
 
                 HttpResponseMessage response = await client.GetAsync(requestURI);
                 JsonSerializer serializer = new JsonSerializer();
@@ -33,20 +33,39 @@ namespace GUI.Network.API
 
                 LinkedList<SubRate> subRateListings = new LinkedList<SubRate>();
 
-                foreach (var item in apiRate.Rates)
-                {
-                    subRateListings.AddLast(new SubRate { Name = item.Key, Value = item.Value });
-                }
+                //foreach (var item in apiRate.Rates)
+                //{
+                //    subRateListings.AddLast(new SubRate { Name = item.Key, Value = item.Value });
+                //}
 
                 Rate rate = new Rate
                 {
                     BaseCurrency = apiRate.Base,
                     Date = DateTime.ParseExact(apiRate.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    Rates = subRateListings.ToList(),
+                    Rates = apiRate.Rates,
                 };
 
                 return rate;
             }
+        }
+
+        public List<SubRate> GetSubRates(Dictionary<string, double> subRates, IEnumerable<CurrencyCode> countries)
+        {
+            LinkedList<SubRate> newSubRates = new();
+            foreach (var item in subRates)
+            {
+                var country = countries.FirstOrDefault(x => x.Code.Equals(item.Key.ToString()));
+
+                if (country is null) continue;
+
+                newSubRates
+                    .AddLast
+                    (
+                    new SubRate(country.Name, item.Key.ToString(), item.Value)
+                    );
+            }
+
+            return newSubRates.ToList();
         }
     }
 }

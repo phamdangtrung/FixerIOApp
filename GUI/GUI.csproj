@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.80" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.3.0-ci89" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
   </ItemGroup>
 
@@ -15,6 +16,13 @@
     <Folder Include="UI\Fonts\" />
     <Folder Include="UI\Images\" />
     <Folder Include="UI\MVVM\Logo\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\Theme\TextBoxSmallTheme.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>
