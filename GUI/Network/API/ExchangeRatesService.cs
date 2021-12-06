@@ -15,16 +15,20 @@ namespace GUI.Network.API
 {
     internal class ExchangeRatesService : IRateService
     {
-        private readonly KeyPair _accessKeys = AccessKeys.GetInstance().ExchangeRates;
+        private readonly KeyPair _accessKeys = AccessKeys.GetInstance().Fixer;
         public async Task<Rate> GetTodayRate(string countryCode)
         {
             using (HttpClient client = new HttpClient())
             {
                 string requestURI = _accessKeys.URI;
 
-                requestURI += "latest";
-                requestURI += "?access_key=";
-                requestURI += _accessKeys.AccessKey;
+                //requestURI += "latest";
+                //requestURI += "?access_key=";
+                //requestURI += _accessKeys.AccessKey;
+                //requestURI += "&base=";
+                //requestURI += countryCode;
+
+                requestURI += $"latest?access_key={_accessKeys.AccessKey}&base={countryCode}";
 
                 HttpResponseMessage response = await client.GetAsync(requestURI);
                 JsonSerializer serializer = new JsonSerializer();
@@ -37,6 +41,32 @@ namespace GUI.Network.API
                 //{
                 //    subRateListings.AddLast(new SubRate { Name = item.Key, Value = item.Value });
                 //}
+
+                Rate rate = new Rate
+                {
+                    BaseCurrency = apiRate.Base,
+                    Date = DateTime.ParseExact(apiRate.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    Rates = apiRate.Rates,
+                };
+
+                return rate;
+            }
+        }
+
+        public async Task<Rate> GetHistoryRate(string countryCode, string date)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string requestURI = _accessKeys.URI;
+
+                requestURI += $"{date}?access_key={_accessKeys.AccessKey}&base={countryCode}";
+
+                HttpResponseMessage response = await client.GetAsync(requestURI);
+                JsonSerializer serializer = new JsonSerializer();
+                string stringRes = await response.Content.ReadAsStringAsync();
+                var apiRate = serializer.Deserialize<APIRate>(new JsonTextReader(new StringReader(stringRes)));
+
+                LinkedList<SubRate> subRateListings = new LinkedList<SubRate>();
 
                 Rate rate = new Rate
                 {

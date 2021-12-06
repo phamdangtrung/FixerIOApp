@@ -2,29 +2,42 @@
 using GUI.Network.Models;
 using GUI.Network.Shared;
 using GUI.UI.Core;
-using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Windows;
-using System;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace GUI.UI.MVVM.ViewModel
 {
     internal class HistoryIndexViewModel : ObservableObject
     {
         #region MVVM models
+        private string currentDate;
+
+        public string CurrentDate
+        {
+            get { return currentDate; }
+            set
+            {
+                currentDate = value;
+                OnPropertyChanged("CurrentDate");
+            }
+        }
+
+
         private DateTime _selectedDate;
 
         public DateTime SelectedDate
         {
             get { return _selectedDate; }
-            set 
+            set
             {
-                _selectedDate = value; 
+                _selectedDate = value;
                 OnPropertyChanged("SelectedDate");
             }
         }
@@ -125,12 +138,13 @@ namespace GUI.UI.MVVM.ViewModel
         #endregion
 
         #region Initialization
-        public HistoryIndexViewModel ()
+        public HistoryIndexViewModel()
         {
             // Get items for Countries and TodayRate
             Countries = _currencyInstance.CurrencyCodes;
             TodayRate = Task.Run(() => _service.GetTodayRate("EUR")).Result;
             SelectedDate = DateTime.Today;
+            CurrentDate = $"Current Date: { DateTime.Today.ToString("dd-MMM-yyyy") }";
 
             // Set default values for SelectedBase, SelectedTarget and BaseText
             SelectedTarget = Countries.FirstOrDefault(x => x.Code.Equals("EUR"));
@@ -217,6 +231,13 @@ namespace GUI.UI.MVVM.ViewModel
 
         public void SetBaseCurrency()
         {
+            if (SelectedDate > DateTime.Today)
+            {
+                MessageBox.Show("Invalid date. Please input date smaller than today.");
+                return;
+            }
+
+            CurrentDate = $"Current Date: { SelectedDate.ToString("dd-MMM-yyyy") }";
             if (SelectedBase is null)
             {
                 MessageBox.Show("Invalid Base Currency. Please select again!");
@@ -225,7 +246,7 @@ namespace GUI.UI.MVVM.ViewModel
 
             BaseText = $"Current Base: { SelectedBase.Code }";
 
-            TodayRate = Task.Run(() => _service.GetTodayRate(SelectedBase.Code)).Result;
+            TodayRate = Task.Run(() => _service.GetHistoryRate(SelectedBase.Code, SelectedDate.ToString("yyyy-MM-dd"))).Result;
             SubRates = _service.GetSubRates(TodayRate.Rates, Countries);
         }
         #endregion
