@@ -35,13 +35,6 @@ namespace GUI.Network.API
                 string stringRes = await response.Content.ReadAsStringAsync();
                 var apiRate = serializer.Deserialize<APIRate>(new JsonTextReader(new StringReader(stringRes)));
 
-                LinkedList<SubRate> subRateListings = new LinkedList<SubRate>();
-
-                //foreach (var item in apiRate.Rates)
-                //{
-                //    subRateListings.AddLast(new SubRate { Name = item.Key, Value = item.Value });
-                //}
-
                 Rate rate = new Rate
                 {
                     BaseCurrency = apiRate.Base,
@@ -65,8 +58,6 @@ namespace GUI.Network.API
                 JsonSerializer serializer = new JsonSerializer();
                 string stringRes = await response.Content.ReadAsStringAsync();
                 var apiRate = serializer.Deserialize<APIRate>(new JsonTextReader(new StringReader(stringRes)));
-
-                LinkedList<SubRate> subRateListings = new LinkedList<SubRate>();
 
                 Rate rate = new Rate
                 {

@@ -134,7 +134,7 @@
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding HistoryIndexViewCommand}"/>
 
-                <RadioButton Content="Converter"
+                <RadioButton Content="About"
                              Height="50"
                              Foreground="Wheat"
                              FontSize="15"
