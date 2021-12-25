@@ -1,4 +1,5 @@
-﻿using GUI.Network.API.Models;
+﻿using Data;
+using GUI.Network.API.Models;
 using GUI.Network.Models;
 using GUI.Network.Services;
 using GUI.Network.Shared;
@@ -29,7 +30,7 @@ namespace GUI.Network.API
                 //requestURI += countryCode;
 
                 requestURI += $"latest?access_key={_accessKeys.AccessKey}&base={countryCode}";
-
+                //requestURI = "https://www.agribank.com.vn/vn/ty-gia";
                 HttpResponseMessage response = await client.GetAsync(requestURI);
                 JsonSerializer serializer = new JsonSerializer();
                 string stringRes = await response.Content.ReadAsStringAsync();
@@ -67,14 +68,22 @@ namespace GUI.Network.API
                 var apiRate = serializer.Deserialize<APIRate>(new JsonTextReader(new StringReader(stringRes)));
 
                 LinkedList<SubRate> subRateListings = new LinkedList<SubRate>();
-
-                Rate rate = new Rate
+                string setID;
+                string sql_base = "exec ps_createBase";
+                setID=QueryCommand.QueryToStored(sql_base);
+                foreach (var item in apiRate.Rates)
+                {
+                    string sql_rate = "INSERT INTO [Rate] ([code],[value],[id_Change])VALUES('"+item.Key+"',"+item.Value+","+setID+")";
+                    QueryCommand.Query(sql_rate);
+                }    
+               Rate rate = new Rate
                 {
                     BaseCurrency = apiRate.Base,
                     Date = DateTime.ParseExact(apiRate.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture),
                     Rates = apiRate.Rates,
+                    //{[AED, 4.151952]}
+                    
                 };
-
                 return rate;
             }
         }

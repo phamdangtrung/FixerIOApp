@@ -7,9 +7,11 @@ namespace Data
     {
         static void Main(string[] args)
         {
-            string sql="";
+            int a = 4;
+            string sql="exec te "+a;
             SqlConnection conn = DBUtils.GetDBConnection();
-            QueryCommand.QueryEmployee( conn, sql);
+           Console.WriteLine( QueryCommand.QueryToStored(sql));
+            Console.Read();
         }
     }
 }

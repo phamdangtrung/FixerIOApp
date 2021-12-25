@@ -7,22 +7,20 @@ using System.Text;
 
 namespace Data
 {
-    class QueryCommand
+    public class QueryCommand
     {
-        public static void QueryEmployee(SqlConnection conn,string sql)
+        public static void Query(string sql)
         {
-            sql = "select  * from Base";
+            //sql = "select * from base";
 
-            conn = DBUtils.GetDBConnection();
+            SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
             try
             {
                 DataSet ds = new DataSet();
-                // Tạo một đối tượng Command.
                 SqlDataAdapter dap = new SqlDataAdapter(sql, conn);
-
-                // Liên hợp Command với Connection.
                 dap.Fill(ds);
+                Console.WriteLine(ds.Tables);
             }
             catch (Exception e)
             {
@@ -36,7 +34,37 @@ namespace Data
                 // Hủy đối tượng, giải phóng tài nguyên.
                 conn.Dispose();
             }
-            Console.Read();
+        }
+        
+        public static string QueryToStored(string sql)
+        {
+            //sql = "select * from base";
+
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            try
+            {
+                DataSet ds = new DataSet();
+                SqlDataAdapter dap = new SqlDataAdapter(sql, conn);
+                dap.Fill(ds);
+                Console.WriteLine(ds.Tables);
+                return ds.Tables[0].Rows[0].ItemArray[0].ToString();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e);
+                Console.WriteLine(e.StackTrace);
+                return "";
+            }
+            finally
+            {
+                // Đóng kết nối.
+                conn.Close();
+                // Hủy đối tượng, giải phóng tài nguyên.
+                conn.Dispose();
+            }
+            
         }
     }
 }
