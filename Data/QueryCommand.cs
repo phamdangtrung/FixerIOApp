@@ -35,7 +35,7 @@ namespace Data
                 conn.Dispose();
             }
         }
-        
+
         public static string QueryToStored(string sql)
         {
             //sql = "select * from base";
@@ -64,7 +64,36 @@ namespace Data
                 // Hủy đối tượng, giải phóng tài nguyên.
                 conn.Dispose();
             }
-            
+
+        }
+        public static DataSet QueryToData(string sql)
+        {
+            //sql = "select * from base";
+
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            try
+            {
+                DataSet ds = new DataSet();
+                SqlDataAdapter dap = new SqlDataAdapter(sql, conn);
+                dap.Fill(ds);
+                Console.WriteLine(ds.Tables);
+                return ds;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e);
+                Console.WriteLine(e.StackTrace);
+                return null;
+            }
+            finally
+            {
+                // Đóng kết nối.
+                conn.Close();
+                // Hủy đối tượng, giải phóng tài nguyên.
+                conn.Dispose();
+            }
         }
     }
 }
