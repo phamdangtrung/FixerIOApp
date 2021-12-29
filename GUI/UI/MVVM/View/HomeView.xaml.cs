@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Data;
+using GUI.Network.Models;
+using GUI.Network.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,9 +24,11 @@ namespace GUI.UI.MVVM.View
     /// </summary>
     public partial class HomeView : UserControl
     {
+        private readonly KeyPair _accessKeys = AccessKeys.GetInstance().Fixer;
         public HomeView()
         {
             InitializeComponent();
+            
         }
     }
 }

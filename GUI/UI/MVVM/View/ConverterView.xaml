@@ -3,11 +3,53 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:local="clr-namespace:GUI.UI.MVVM.View"
       mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid>
-
+        <DatePicker HorizontalAlignment="Left" Margin="44,38,0,0" VerticalAlignment="Top" Width="129" Height="49" 
+                            SelectedDate="{Binding SelectedDate}"
+                            x:Name="selectedDate" 
+                            Background="#FF3B8320"
+                            Foreground="#FF680D11"
+                            materialDesign:HintAssist.Hint="Pick Date"
+                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}" BorderBrush="#896AB067" OpacityMask="#FF0F5F16" Text="Pick date" Cursor="Arrow"/>
+        <ComboBox HorizontalAlignment="Left" Margin="213,38,0,0" VerticalAlignment="Top" Width="170" Height="49"
+                               IsEditable="True"
+                              IsReadOnly="False"
+                              Text="Default (EUR). Please select!"
+                              Background="#CFCFCF"
+                                Style="{StaticResource MaterialDesignFilledComboBox}"
+                                ItemsSource="{Binding Countries}"
+                                DisplayMemberPath="Name"
+                              SelectedItem="{Binding SelectedFrom}" x:Name="selectFrom"
+                  />
+        <ComboBox HorizontalAlignment="Left" Margin="416,38,0,0" VerticalAlignment="Top" Width="146" Height="49"
+                                 IsEditable="True"
+                              IsReadOnly="False"
+                              Text="Default (EUR). Please select!"
+                              Background="#CFCFCF"
+                  Style="{StaticResource MaterialDesignFilledComboBox}"
+                                ItemsSource="{Binding Countries}"
+                                DisplayMemberPath="Name"
+                            SelectedItem="{Binding SelectedTo}"
+                  x:Name="selectTo"
+                  />
+        <TextBox HorizontalAlignment="Left" Margin="416,103,0,0"  TextWrapping="Wrap" VerticalAlignment="Top" Width="146" Height="70"
+                 IsReadOnly="True"
+                  VerticalContentAlignment="Center"
+                  Style="{StaticResource ModernTextBoxSmall}"
+                  Text="{Binding Result}"
+                  x:Name="result" 
+                 />
+        <TextBox HorizontalAlignment="Left" Margin="213,123,0,0"  TextWrapping="Wrap" VerticalAlignment="Top" Width="170" Height="33"
+                 Background="#353333"
+                 Foreground="#CFCFCF"
+                 Text="{Binding Input}"
+                  x:Name="input" />
+        <Button Content="Convert" HorizontalAlignment="Left" Margin="627,122,0,0" VerticalAlignment="Top"
+                 Click="converto" ClickMode="Hover"/>
     </Grid>
 </UserControl>

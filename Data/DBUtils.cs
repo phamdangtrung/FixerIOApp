@@ -20,7 +20,8 @@ namespace Data
         }
         public static SqlConnection GetDBConnection(string dataSource,string database,string username,string password)
         {
-            return DBSQLUtils.GetDBConnection(dataSource, database, username, password);
+            string _datasource=@dataSource;
+            return DBSQLUtils.GetDBConnection(_datasource, database, username, password);
         }
     }
 }
