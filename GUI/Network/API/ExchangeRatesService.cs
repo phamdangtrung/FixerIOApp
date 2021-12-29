@@ -22,7 +22,7 @@ namespace GUI.Network.API
         {
             using (HttpClient client = new HttpClient())
             {
-                /*string requestURI = _accessKeys.URI;
+                string requestURI = _accessKeys.URI;
 
                 //requestURI += "latest";
                 //requestURI += "?access_key=";
@@ -46,28 +46,12 @@ namespace GUI.Network.API
                 {
                     string sql_rate = "INSERT INTO [Rate] ([code],[value],[id_Change])VALUES('" + item.Key + "'," + item.Value + "," + setID + ")";
                     QueryCommand.Query(sql_rate);
-                }*/
-                string date = DateTime.Today.ToString("yyyy-MM-dd");
-                string sql_base = "select distinct code from Rate";
-                DataSet tab = QueryCommand.QueryToData(sql_base);
-                List<string> list = new List<string>();
-                foreach (DataRow item in tab.Tables[0].Rows)
-                {
-                    list.Add(item.ItemArray[0].ToString().Trim());
                 }
-                LinkedList<SubRate> subRateListings = new LinkedList<SubRate>();
-                Dictionary<string, double> rates = new Dictionary<string, double>();
-                foreach (string item in list)
-                {
-                    string sqlst = "exec ps_convertTo '" + countryCode.ToString() + "','" + item.ToString() + "','" + date.ToString() + "',1";
-                    rates.Add(item, Convert.ToDouble(QueryCommand.QueryToStored(sqlst).ToString()));
-                }
-                
                 Rate rate = new Rate
                 {
-                    BaseCurrency = countryCode,
-                    Date = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    Rates = rates,
+                    BaseCurrency = apiRate.Base,
+                    Date = DateTime.ParseExact(apiRate.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    Rates = apiRate.Rates,
                 };
 
                 return rate;
