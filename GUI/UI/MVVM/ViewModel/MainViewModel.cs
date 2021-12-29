@@ -8,10 +8,12 @@ namespace GUI.UI.MVVM.ViewModel
         public RelayCommand TodayIndexViewCommand { get; set; }
         public RelayCommand HistoryIndexViewCommand { get; set; }
         public RelayCommand ConverterViewCommand { get; set; }
+        public RelayCommand SystemConfigurationViewCommand { get; set; }
         public HomeViewModel HomeVM { get; set; }
         public TodayIndexViewModel TodayIndexVM { get; set; }
         public HistoryIndexViewModel HistoryIndexVM { get; set; }
         public ConverterViewModel ConverterVM { get; set; }
+        public SystemConfigurationViewModel SystemConfigurationVM { get; set; }
 
         private object _currentView;
         public object CurrentView
@@ -50,6 +52,10 @@ namespace GUI.UI.MVVM.ViewModel
             ConverterViewCommand = new(obj =>
             {
                 CurrentView = ConverterVM;
+            });
+            SystemConfigurationViewCommand = new(obj =>
+            {
+                CurrentView = SystemConfigurationVM;
             });
         }
     }

@@ -140,6 +140,12 @@
                              FontSize="15"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding ConverterViewCommand}"/>
+                <RadioButton Content="System Configuration"
+                             Height="50"
+                             Foreground="Wheat"
+                             FontSize="15"
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding SystemConfigurationViewCommand}"/>
             </StackPanel>
 
             <DockPanel Grid.Column="1">

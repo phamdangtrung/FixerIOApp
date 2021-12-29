@@ -15,7 +15,7 @@
                 <ResourceDictionary Source="UI/Theme/ButtonMaterialTheme.xaml"/>
                 <ResourceDictionary Source="UI/Theme/ComboBoxItem.xaml"/>
                 <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
-                
+
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
@@ -35,6 +35,10 @@
 
             <DataTemplate DataType="{x:Type viewModel:ConverterViewModel}">
                 <view:ConverterView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:SystemConfigurationViewModel}">
+                <view:SystemConfigurationView/>
             </DataTemplate>
 
         </ResourceDictionary>
