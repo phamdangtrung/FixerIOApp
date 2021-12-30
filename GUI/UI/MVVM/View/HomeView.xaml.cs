@@ -1,4 +1,6 @@
-﻿using Data;
+﻿
+using Gui.Data;
+using GUI.Network.API;
 using GUI.Network.Models;
 using GUI.Network.Shared;
 using System;
@@ -6,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,10 +28,12 @@ namespace GUI.UI.MVVM.View
     public partial class HomeView : UserControl
     {
         private readonly KeyPair _accessKeys = AccessKeys.GetInstance().Fixer;
+
         public HomeView()
         {
+           
             InitializeComponent();
-            
+            ConfigSystem.UpdateDatabaseAsync(ConfigSystem.defaultCountryCode);
         }
     }
 }

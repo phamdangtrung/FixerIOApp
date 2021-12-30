@@ -7,6 +7,40 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-
+        <TextBox HorizontalAlignment="Left" Margin="60,55,0,0"  TextWrapping="Wrap" VerticalAlignment="Top" Width="170" Height="33"
+                 Background="#353333"
+                 Foreground="#CFCFCF"
+                 Text="{Binding Input}"
+                  x:Name="inputCountryCode" />
+        <TextBox HorizontalAlignment="Left" Margin="60,135,0,0"  TextWrapping="Wrap" VerticalAlignment="Top" Width="170" Height="33"
+                 Background="#353333"
+                 Foreground="#CFCFCF"
+                 Text="{Binding Input}"
+                  x:Name="inputSource" />
+        <TextBox HorizontalAlignment="Left" Margin="60,0,0,0"  TextWrapping="Wrap" VerticalAlignment="Center" Width="170" Height="34"
+                 Background="#353333"
+                 Foreground="#CFCFCF"
+                 Text="{Binding Input}"
+                  x:Name="inputDatabase" />
+        <TextBox HorizontalAlignment="Left" Margin="60,280,0,0"  TextWrapping="Wrap" VerticalAlignment="Top" Width="170" Height="33"
+                 Background="#353333"
+                 Foreground="#CFCFCF"
+                 Text="{Binding Input}"
+                  x:Name="inputUser" />
+        <TextBox HorizontalAlignment="Left" Margin="60,362,0,0"  TextWrapping="Wrap" VerticalAlignment="Top" Width="170" Height="33"
+                 Background="#353333"
+                 Foreground="#CFCFCF"
+                 Text="{Binding Input}"
+                  x:Name="inputPass" />
+        <Button Content="Button" HorizontalAlignment="Left" Margin="260,363,0,0" VerticalAlignment="Top" Click="SavePassword"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="260,281,0,0" VerticalAlignment="Top" Click="SaveUsername"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="260,0,0,0" VerticalAlignment="Center" Click="SaveDataBase"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="260,136,0,0" VerticalAlignment="Top" Click="SaveDataSource"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="260,56,0,0" VerticalAlignment="Top" Click="SaveCountryCode"/>
+        <Label Content="DefaulCountryCode" HorizontalAlignment="Left" Margin="60,25,0,0" VerticalAlignment="Top" Width="170"/>
+        <Label Content="DataSoure" HorizontalAlignment="Left" Margin="60,105,0,0" VerticalAlignment="Top" Width="170"/>
+        <Label Content="Database" HorizontalAlignment="Left" Margin="60,179,0,0" VerticalAlignment="Top" Width="170"/>
+        <Label Content="Username" HorizontalAlignment="Left" Margin="60,251,0,0" VerticalAlignment="Top" Width="170"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="60,335,0,0" VerticalAlignment="Top" Width="170"/>
     </Grid>
 </UserControl>
