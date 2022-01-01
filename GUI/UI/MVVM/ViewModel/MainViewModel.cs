@@ -32,6 +32,7 @@ namespace GUI.UI.MVVM.ViewModel
             TodayIndexVM = new();
             HistoryIndexVM = new();
             ConverterVM = new();
+            SystemConfigurationVM = new();
 
             CurrentView = HomeVM;
 
