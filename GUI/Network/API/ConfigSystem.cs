@@ -31,7 +31,7 @@ namespace GUI.Network.API
             
                 using (HttpClient client = new HttpClient())
                 {
-                    string requestURI = "https://data.fixer.io/api/latest?access_key=2c534ca232efc544b377a6d0a426d2a7&base=";
+                    string requestURI = "https://data.fixer.io/api/latest?access_key=2c534ca232efc544b377a6d0a426d2a7&base=EUR";
 
                     //requestURI += "latest";
                     //requestURI += "?access_key=";

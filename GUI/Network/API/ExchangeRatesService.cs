@@ -21,6 +21,7 @@ namespace GUI.Network.API
         private readonly KeyPair _accessKeys = AccessKeys.GetInstance().Fixer;
         public async Task<Rate> GetTodayRate(string countryCode)
         {
+            ConfigSystem.UpdateDatabaseAsync(ConfigSystem.defaultCountryCode);
             using (HttpClient client = new HttpClient())
             {
                 /*string requestURI = _accessKeys.URI;

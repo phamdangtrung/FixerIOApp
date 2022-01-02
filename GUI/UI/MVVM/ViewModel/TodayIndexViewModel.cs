@@ -116,6 +116,7 @@ namespace GUI.UI.MVVM.ViewModel
         {
             // Get items for Countries and TodayRate
             Countries = _currencyInstance.CurrencyCodes;
+          
             TodayRate = Task.Run(() => _service.GetTodayRate("EUR")).Result;
 
             // Set default values for SelectedBase, SelectedTarget and BaseText

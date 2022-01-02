@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using GUI.Network.API;
+using System.Windows;
 using System.Windows.Input;
 
 namespace GUI
@@ -9,7 +10,7 @@ namespace GUI
     public partial class MainWindow : Window
     {
         public MainWindow()
-        {
+        {       
             InitializeComponent();
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

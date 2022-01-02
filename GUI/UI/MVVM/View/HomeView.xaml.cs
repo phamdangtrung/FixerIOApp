@@ -31,9 +31,7 @@ namespace GUI.UI.MVVM.View
 
         public HomeView()
         {
-           
             InitializeComponent();
-            ConfigSystem.UpdateDatabaseAsync(ConfigSystem.defaultCountryCode);
         }
     }
 }

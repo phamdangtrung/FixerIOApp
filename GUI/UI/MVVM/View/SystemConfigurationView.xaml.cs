@@ -24,6 +24,7 @@ namespace GUI.UI.MVVM.View
         public SystemConfigurationView()
         {
             InitializeComponent();
+            inputUser.Text = ConfigSystem.Username;
         }
         private void SavePassword(object sender, RoutedEventArgs e)
         {
