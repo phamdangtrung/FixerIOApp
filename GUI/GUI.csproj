@@ -10,6 +10,7 @@
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.80" />
     <PackageReference Include="MaterialDesignThemes" Version="4.3.0-ci89" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
 
   <ItemGroup>

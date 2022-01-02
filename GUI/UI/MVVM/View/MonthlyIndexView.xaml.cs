@@ -5,9 +5,9 @@ namespace GUI.UI.MVVM.View
     /// <summary>
     /// Interaction logic for ConverterView.xaml
     /// </summary>
-    public partial class ConverterView : UserControl
+    public partial class MonthlyIndexView : UserControl
     {
-        public ConverterView()
+        public MonthlyIndexView()
         {
             InitializeComponent();
         }

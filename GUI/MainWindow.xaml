@@ -134,12 +134,12 @@
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding HistoryIndexViewCommand}"/>
 
-                <RadioButton Content="About"
+                <RadioButton Content="Monthly Index"
                              Height="50"
                              Foreground="Wheat"
                              FontSize="15"
                              Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding ConverterViewCommand}"/>
+                             Command="{Binding MonthlyIndexViewCommand}"/>
             </StackPanel>
 
             <DockPanel Grid.Column="1">
