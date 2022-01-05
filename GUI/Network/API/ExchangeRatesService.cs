@@ -1,15 +1,12 @@
 ﻿
 using Gui.Data;
-using GUI.Network.API.Models;
 using GUI.Network.Models;
 using GUI.Network.Services;
 using GUI.Network.Shared;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -64,7 +61,7 @@ namespace GUI.Network.API
                     string sqlst = "exec ps_convertTo '" + countryCode.ToString() + "','" + item.ToString() + "','" + date.ToString() + "',1";
                     rates.Add(item, Convert.ToDouble(QueryCommand.QueryToStored(sqlst).ToString()));
                 }
-                
+
                 Rate rate = new Rate
                 {
                     BaseCurrency = countryCode,
@@ -79,9 +76,9 @@ namespace GUI.Network.API
         public async Task<Rate> GetHistoryRate(string countryCode, string date)
         {
             string sql_base = "select distinct code from Rate";
-            DataSet tab= QueryCommand.QueryToData(sql_base);
+            DataSet tab = QueryCommand.QueryToData(sql_base);
             List<string> list = new List<string>();
-            foreach(DataRow item in tab.Tables[0].Rows)
+            foreach (DataRow item in tab.Tables[0].Rows)
             {
                 list.Add(item.ItemArray[0].ToString().Trim());
             }
@@ -115,20 +112,20 @@ namespace GUI.Network.API
                 var apiRate = serializer.Deserialize<APIRate>(new JsonTextReader(new StringReader(stringRes)));
 
                 LinkedList<SubRate> subRateListings = new LinkedList<SubRate>();
-                
+
                Rate rate = new Rate
                 {
                     BaseCurrency = apiRate.Base,
                     Date = DateTime.ParseExact(apiRate.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture),
                     Rates = apiRate.Rates,
                     //{[AED, 4.151952]}
-                    
+
                 };
                 return rate;
             }*/
 
 
-            
+
         }
 
         public List<SubRate> GetSubRates(Dictionary<string, double> subRates, IEnumerable<CurrencyCode> countries)
@@ -152,15 +149,15 @@ namespace GUI.Network.API
         public double GetConvertTo(string countryCodeFrom, string countryCodeTo, string date, int amount)
         {
             string sqlst = "exec ps_convertTo '" + countryCodeFrom + "','" + countryCodeTo + "','" + date.ToString() + "'," + amount;
-        
+
             return Convert.ToDouble(QueryCommand.QueryToStored(sqlst).ToString());
         }
         public List<double> getValueInMonth(string countryCodeFrom, string date)
         {
-            string sqlst = "exec ps_rateOnMonth '"+"'"+countryCodeFrom+"','"+date+"'";
-            DataSet dataSet= QueryCommand.QueryToData(sqlst);
+            string sqlst = "exec ps_rateOnMonth '" + "'" + countryCodeFrom + "','" + date + "'";
+            DataSet dataSet = QueryCommand.QueryToData(sqlst);
             List<double> listValue = new List<double>();
-            foreach(DataRow item in dataSet.Tables[0].Rows)
+            foreach (DataRow item in dataSet.Tables[0].Rows)
             {
                 listValue.Add(Convert.ToDouble(item.ItemArray[1]));
             }
@@ -179,7 +176,7 @@ namespace GUI.Network.API
         }
         public double getpercent(string countryCodeFrom, string date)
         {
-            string sqlst = "exec ratechange '" + "'"+countryCodeFrom+"','" + date + "'";
+            string sqlst = "exec ratechange '" + "'" + countryCodeFrom + "','" + date + "'";
             string percent = QueryCommand.QueryToStored(sqlst);
             return Convert.ToDouble(percent);
         }
@@ -200,5 +197,5 @@ namespace GUI.Network.API
             }
             return listPercent;
         }
-     }
+    }
 }
